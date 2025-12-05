@@ -11,6 +11,12 @@ export const DB = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name })
     });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Login failed: ${response.status}`);
+    }
+
     const user = await response.json();
     localStorage.setItem('gemini_clone_user_id', user.id); // Keep minimal session state
     return user;
@@ -33,6 +39,7 @@ export const DB = {
     if (!userId) return [];
     
     const response = await fetch(`${API_URL}/chats?userId=${userId}`);
+    if (!response.ok) return [];
     return response.json();
   },
 

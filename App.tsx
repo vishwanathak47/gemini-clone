@@ -111,9 +111,10 @@ export default function App() {
       setUser(user);
       setIsAuthenticated(true);
       await loadChats();
-    } catch (e) {
+    } catch (e: any) {
       console.error("Login failed", e);
-      alert("Could not connect to server. Ensure backend is running.");
+      // Show the actual error from the backend/DB
+      alert(e.message || "Could not connect to server. Ensure backend is running.");
     }
   };
 

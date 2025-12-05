@@ -36,18 +36,32 @@ app.get('/', (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { name } = req.body;
-    const id = name.toLowerCase().replace(/\s+/g, '-');
+    
+    // Validate Input
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    const cleanName = name.trim();
+    const id = cleanName.toLowerCase().replace(/\s+/g, '-');
+    
     let user = await User.findOne({ id });
     
     if (!user) {
-      user = await User.create({
-        id,
-        name,
-        avatar: `https://ui-avatars.com/api/?name=${name}&background=random`
-      });
+      try {
+        user = await User.create({
+          id,
+          name: cleanName,
+          avatar: `https://ui-avatars.com/api/?name=${cleanName}&background=random`
+        });
+      } catch (dbError) {
+        console.error("Database Create Error:", dbError);
+        return res.status(500).json({ error: "Failed to create user. Name might be taken or invalid." });
+      }
     }
     res.json(user);
   } catch (error) {
+    console.error("Login Route Error:", error);
     res.status(500).json({ error: error.message });
   }
 });
