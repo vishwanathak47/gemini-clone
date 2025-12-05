@@ -1,6 +1,7 @@
 import { Message } from "../types";
 
-const API_URL = 'http://localhost:5000/api';
+// Use environment variable for production, fallback to localhost for development
+const API_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const sendMessageStream = async (
   history: Message[], 
@@ -18,6 +19,12 @@ export const sendMessageStream = async (
         message 
       })
     });
+
+    // Check for server errors (e.g., 500 Internal Server Error)
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Server Error: ${response.status}`);
+    }
 
     if (!response.body) throw new Error("No response body");
 

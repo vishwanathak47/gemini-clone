@@ -15,6 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize Gemini
+// CRITICAL: Check if API Key exists
+if (!process.env.API_KEY) {
+  console.error("FATAL ERROR: API_KEY is missing in environment variables!");
+}
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // Connect to MongoDB
@@ -96,6 +100,10 @@ app.delete('/api/chats/:id', async (req, res) => {
 
 app.post('/api/generate', async (req, res) => {
   try {
+    if (!process.env.API_KEY) {
+      throw new Error("Server is missing API_KEY. Please check Render environment variables.");
+    }
+
     const { history, message } = req.body;
 
     // Convert frontend history format to Gemini SDK format
@@ -131,8 +139,14 @@ app.post('/api/generate', async (req, res) => {
     res.end();
 
   } catch (error) {
-    console.error('Gemini API Error:', error);
-    res.status(500).json({ error: 'Failed to generate response' });
+    // LOG THE ACTUAL ERROR TO THE SERVER CONSOLE
+    console.error('Gemini API Error Details:', error);
+    
+    // Send a safe error message to the client
+    res.status(500).json({ 
+      error: error.message || 'Failed to generate response',
+      details: error.toString() // Optional: remove this in strict production
+    });
   }
 });
 
