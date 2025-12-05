@@ -1,5 +1,7 @@
 # Gemini Clone (MERN Stack)
 
+live link:  https://gemini-qmao.onrender.com
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D%2018.0.0-brightgreen)
 ![React](https://img.shields.io/badge/react-v19-blue)
