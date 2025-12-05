@@ -22,6 +22,11 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+// --- Root Route (Health Check) ---
+app.get('/', (req, res) => {
+  res.send('Gemini Clone Backend is running! 🚀');
+});
+
 // --- Auth Routes ---
 
 app.post('/api/login', async (req, res) => {
