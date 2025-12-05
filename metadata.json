@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Clone",
+  "description": "A full-featured Gemini AI clone with chat history, streaming responses, and Markdown support, simulating a MERN stack architecture via local storage.",
+  "requestFramePermissions": []
+}
