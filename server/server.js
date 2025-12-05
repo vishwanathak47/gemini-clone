@@ -23,7 +23,19 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    // --- FIX FOR DUPLICATE KEY ERRORS ---
+    // This removes the old unique index on 'email' if it exists,
+    // which is causing the "E11000 duplicate key: { email: null }" error.
+    try {
+      await User.collection.dropIndex('email_1');
+      console.log('Fixed: Dropped legacy unique index on email');
+    } catch (e) {
+      // Ignore error if index doesn't exist (code 27)
+      if (e.code !== 27) console.log('Index check:', e.message);
+    }
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
 // --- Root Route (Health Check) ---
@@ -43,26 +55,28 @@ app.post('/api/login', async (req, res) => {
     }
 
     const cleanName = name.trim();
-    const id = cleanName.toLowerCase().replace(/\s+/g, '-');
+    // Create a URL-safe ID
+    const id = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '-');
     
-    let user = await User.findOne({ id });
+    // Atomic Upsert: Find the user OR create them in one step.
+    // This prevents race conditions and duplicate key errors.
+    const user = await User.findOneAndUpdate(
+      { id }, // Find by ID
+      { 
+        id, 
+        name: cleanName, 
+        avatar: `https://ui-avatars.com/api/?name=${cleanName}&background=random` 
+      }, 
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
     
-    if (!user) {
-      try {
-        user = await User.create({
-          id,
-          name: cleanName,
-          avatar: `https://ui-avatars.com/api/?name=${cleanName}&background=random`
-        });
-      } catch (dbError) {
-        console.error("Database Create Error:", dbError);
-        return res.status(500).json({ error: "Failed to create user. Name might be taken or invalid." });
-      }
-    }
     res.json(user);
   } catch (error) {
     console.error("Login Route Error:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: error.message || "Login failed",
+      details: error.toString() 
+    });
   }
 });
 
