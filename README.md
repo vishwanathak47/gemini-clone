@@ -1,45 +1,75 @@
-# Gemini Clone (MERN Stack)
+# Gemini Clone - Full Stack AI Chat Application
 
-live link:  https://gemini-qmao.onrender.com
+A high-fidelity clone of the Google Gemini UI, built with the MERN stack (MongoDB, Express, React, Node.js). This application features real-time streaming AI responses, markdown rendering, and persistent chat history.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D%2018.0.0-brightgreen)
-![React](https://img.shields.io/badge/react-v19-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-4.4%2B-green)
+## 🚀 Live Demo
+https://gemini-qmao.onrender.com
 
-A pixel-perfect, full-stack clone of the Google Gemini chat interface. Built with the **MERN Stack** (MongoDB, Express, React, Node.js), this application features real-time AI streaming responses, persistent chat history, and a modern, responsive UI.
+## ✨ Key Features
 
-## 🚀 Features
-
-- **⚡ Real-time AI Streaming:** Simulates the native Gemini experience by streaming responses character-by-character from the backend.
-- **🧠 Context-Aware Chat:** The AI remembers previous messages in the conversation for coherent follow-up questions.
-- **💾 Persistent History:** User sessions and chat history are stored in **MongoDB**, allowing you to revisit past conversations.
-- **🎨 Modern UI/UX:** Built with **Tailwind CSS** to match Google's design system, featuring dark mode support, smooth animations, and a responsive sidebar.
-- **📝 Markdown Support:** Renders code blocks, tables, and formatted text beautifully using `react-markdown`.
-- **🔐 Multi-User Simulation:** Simple authentication system to separate chat histories for different users.
+*   **Real-time AI Streaming:** Leverages Server-Sent Events (SSE) logic to stream responses token-by-token for a fluid user experience.
+*   **Contextual Conversations:** The AI remembers previous messages in the session, allowing for multi-turn conversations.
+*   **Rich Text Rendering:** Supports Markdown, code blocks (with syntax highlighting), lists, and bold text.
+*   **Persistent History:** All chats are stored in MongoDB, allowing users to revisit past conversations.
+*   **Responsive Design:** Fully responsive UI built with Tailwind CSS, supporting both Dark and Light modes.
+*   **Multi-Session Management:** Create new chats, switch between active chats, and delete old conversations.
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-- React 19 (Vite)
-- TypeScript
-- Tailwind CSS
-- Lucide React (Icons)
+*   **Frontend:** React 19, TypeScript, Tailwind CSS, Lucide React, React Markdown.
+*   **Backend:** Node.js, Express.js.
+*   **Database:** MongoDB Atlas (Mongoose ODM).
+*   **AI:** Google Gemini API (`gemini-2.5-flash` model).
 
-**Backend:**
-- Node.js & Express.js
-- Google GenAI SDK (`@google/genai`)
-- MongoDB & Mongoose
+## ⚙️ Installation & Run Locally
 
-## 📸 Screenshots
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/vishwanathak47/gemini-clone.git
+    cd gemini-clone
+    ```
 
-*(Add your screenshots here. You can drag and drop images into GitHub issues to generate URLs, then paste them here)*
+2.  **Setup Environment Variables**
+    Create a `.env` file in the root directory (use `.env.example` as a reference):
+    ```env
+    API_KEY=your_google_gemini_api_key
+    MONGODB_URI=your_mongodb_connection_string
+    PORT=5000
+    ```
 
-## 📦 Installation & Setup
+3.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
 
-Follow these steps to run the project locally.
+4.  **Run the Application**
+    Open two terminals:
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/YOUR_USERNAME/gemini-clone.git
-cd gemini-clone
+    *Terminal 1 (Backend):*
+    ```bash
+    npm run server
+    ```
+
+    *Terminal 2 (Frontend):*
+    ```bash
+    npm start
+    ```
+
+## ⚠️ Known Limitations & Future Improvements
+
+This project was built as a portfolio demonstration of full-stack capabilities and AI integration. Please note the following design choices:
+
+1.  **Open API / Auth:**
+    *   *Current State:* The application uses a simple username-based session for demonstration purposes. It does not currently implement secure authentication (JWT/OAuth).
+    *   *Future Improvement:* In a production environment, I would integrate Firebase Auth or Auth0 to securely handle user sessions and protect API endpoints.
+
+2.  **API Rate Limiting:**
+    *   This project uses the Google Gemini Free Tier API, which has a limit of 15 requests per minute. Heavy usage may result in temporary errors.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 📝 License
+
+This project is open source.
